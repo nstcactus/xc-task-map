@@ -1,6 +1,7 @@
 # xc-task-map
 
-`xc-task-map` is a Vue 3 component package to display XC tasks (XCTSK) and flight tracks (IGC) with an elevation profile, slots, i18n-ready text overrides, and pluggable map adapters.
+`xc-task-map` is a Vue 3 component package to display XC tasks (XCTSK) and flight tracks (IGC) with an elevation 
+profile, slots, i18n-ready text overrides, and pluggable map adapters.
 
 ## Install
 
@@ -118,7 +119,9 @@ Available slots:
 
 ## i18n
 
-Current text is slot-overridable for state messages and tooltip content. For labels outside slots (for example toggle buttons and tab labels), pass localized wrappers around this component or provide a translated forked wrapper until dedicated `messages` prop is introduced.
+Current text is slot-overridable for state messages and tooltip content. For labels outside slots
+(for example, toggle buttons and tab labels), pass localized wrappers around this component or provide a translated 
+forked wrapper until dedicated `messages` prop is introduced.
 
 ## Alternative Map Adapter
 
