@@ -1,0 +1,63 @@
+{
+  "name": "xc-task-map",
+  "version": "0.1.0",
+  "description": "Vue 3 component to display XC tasks and IGC flight tracks with slots, i18n, and pluggable map adapters.",
+  "keywords": [
+    "vue",
+    "vue3",
+    "paragliding",
+    "xctsk",
+    "igc",
+    "mapbox"
+  ],
+  "type": "module",
+  "main": "./dist/xc-task-map.cjs",
+  "module": "./dist/xc-task-map.js",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./dist/xc-task-map.js",
+      "require": "./dist/xc-task-map.cjs"
+    },
+    "./types": {
+      "types": "./src/xc-task-map/types.ts",
+      "import": "./dist/xc-task-map.js",
+      "require": "./dist/xc-task-map.cjs"
+    },
+    "./adapters": {
+      "types": "./src/xc-task-map/adapters/index.ts",
+      "import": "./dist/xc-task-map.js",
+      "require": "./dist/xc-task-map.cjs"
+    }
+  },
+  "files": ["dist", "src"],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "dependencies": {
+    "@mapbox/timespace": "^2.0.4",
+    "@studiometa/vue-mapbox-gl": "^2.5.0",
+    "chart.js": "^4.5.1",
+    "igc-parser": "^2.0.0",
+    "mapbox-gl": "^3.12.0",
+    "xc-task-optimizer": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.6.0",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "sass": "^1.93.2",
+    "typescript": "^5.9.3",
+    "vite": "^6.2.0",
+    "vue": "^3.5.13",
+    "vue-tsc": "^2.1.10"
+  },
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "npm run clean && vite build",
+    "smoke": "npm run build && node scripts/smoke.mjs"
+  }
+}
