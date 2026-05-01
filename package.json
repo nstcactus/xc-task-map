@@ -1,6 +1,6 @@
 {
   "name": "xc-task-map",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Vue 3 component to display XC tasks and IGC flight tracks with slots, i18n, and pluggable map adapters.",
   "keywords": [
     "vue",
