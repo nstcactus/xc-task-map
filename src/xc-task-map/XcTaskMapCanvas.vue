@@ -51,11 +51,15 @@ onMounted(async () => {
     <component
         :is="adapter.component"
         ref="map"
-        class="h-full w-full"
+        class="xc-task-map-canvas"
         v-bind="canvasProps"
     />
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
+.xc-task-map-canvas {
+    width: 100%;
+    height: 100%;
+}
 
 </style>

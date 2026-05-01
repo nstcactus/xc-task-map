@@ -55,17 +55,17 @@ function handleMapReady(instance: unknown): void {
 </script>
 
 <template>
-    <div class="flex h-[75vh] overflow-hidden rounded-xl border border-slate-200 bg-white">
-        <div class="relative h-full flex-1">
+    <div class="xc-task-map">
+        <div class="xc-task-map__main">
             <button
-                class="absolute right-3 top-3 z-10 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm hover:bg-slate-50"
+                class="xc-task-map__toggle-button"
                 type="button"
                 @click="toggleSidebar"
             >
                 {{ isSidebarOpen ? 'Hide sidebar' : 'Show sidebar' }}
             </button>
             <button
-                class="absolute right-3 top-14 z-10 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm hover:bg-slate-50"
+                class="xc-task-map__toggle-button xc-task-map__toggle-button--secondary"
                 type="button"
                 @click="toggleElevationOverlay"
             >
@@ -127,5 +127,44 @@ function handleMapReady(instance: unknown): void {
 </template>
 
 <style scoped lang="scss">
+.xc-task-map {
+    display: flex;
+    height: 75vh;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    background: #fff;
+}
+
+.xc-task-map__main {
+    position: relative;
+    flex: 1;
+    height: 100%;
+}
+
+.xc-task-map__toggle-button {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 10;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.375rem;
+    background: #fff;
+    color: #334155;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.2;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12);
+    cursor: pointer;
+
+    &:hover {
+        background: #f8fafc;
+    }
+}
+
+.xc-task-map__toggle-button--secondary {
+    top: 3.5rem;
+}
 
 </style>

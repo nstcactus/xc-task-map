@@ -20,6 +20,7 @@
       "import": "./dist/xc-task-map.js",
       "require": "./dist/xc-task-map.cjs"
     },
+    "./style.css": "./dist/xc-task-map.css",
     "./types": {
       "types": "./src/xc-task-map/types.ts",
       "import": "./dist/xc-task-map.js",

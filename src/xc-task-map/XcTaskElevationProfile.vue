@@ -301,22 +301,22 @@ onBeforeUnmount(() => {
 <template>
     <div
             v-if="props.isOpen"
-            class="absolute bottom-0 left-0 right-0 z-10 h-48 border-t border-slate-200 bg-white/95 px-3 py-2 backdrop-blur"
+            class="xc-task-elevation-profile"
     >
-        <p v-if="!props.tracks.length" class="flex h-full items-center justify-center text-sm text-slate-500">
+        <p v-if="!props.tracks.length" class="xc-task-elevation-profile__empty">
             Select at least one loaded track to display elevation timeline.
         </p>
         <canvas
                 v-else
                 ref="chartCanvas"
-                class="h-full w-full"
+                class="xc-task-elevation-profile__canvas"
                 @mouseleave="() => { clearTooltipState(); emit('clear-hovered-point'); }"
                 @mousemove="handleChartMouseMove"
         ></canvas>
 
         <div
             v-if="tooltipState"
-            class="pointer-events-none absolute z-20 max-w-xs rounded-md border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700 shadow-lg"
+            class="xc-task-elevation-profile__tooltip"
             :style="{
                 left: `${tooltipState.chartX + 16}px`,
                 top: `${tooltipState.chartY - 16}px`,
@@ -332,7 +332,7 @@ onBeforeUnmount(() => {
                 :local-time="tooltipState.localTime"
                 :timezone-offset-seconds="tooltipState.timezoneOffsetSeconds"
             >
-                <p class="font-semibold text-slate-900">{{ tooltipState.track.title }}</p>
+                <p class="xc-task-elevation-profile__tooltip-title">{{ tooltipState.track.title }}</p>
                 <p>{{ tooltipState.elevationMeters }} m</p>
                 <p>{{ tooltipState.localTime }} (local)</p>
                 <p>{{ tooltipState.utcTime }} (UTC)</p>
@@ -342,5 +342,60 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="scss" scoped>
+.xc-task-elevation-profile {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    height: 12rem;
+    padding: 0.5rem 0.75rem;
+    border-top: 1px solid #e2e8f0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(4px);
+}
+
+.xc-task-elevation-profile__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    margin: 0;
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+.xc-task-elevation-profile__canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.xc-task-elevation-profile__tooltip {
+    pointer-events: none;
+    position: absolute;
+    z-index: 20;
+    max-width: 20rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+    background: #fff;
+    color: #334155;
+    font-size: 0.75rem;
+    line-height: 1.35;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.16);
+
+    p {
+        margin: 0;
+    }
+
+    p + p {
+        margin-top: 0.125rem;
+    }
+}
+
+.xc-task-elevation-profile__tooltip-title {
+    color: #0f172a;
+    font-weight: 600;
+}
 
 </style>
