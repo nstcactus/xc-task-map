@@ -112,7 +112,7 @@ const emit = defineEmits<{
                                     <span class="xc-task-map-sidebar__track-dot" :style="{ backgroundColor: props.trackStates[index]?.color }"></span>
                                     <p class="xc-task-map-sidebar__track-pilot">{{ track.pilot }}</p>
                                 </div>
-                                <p class="xc-task-map-sidebar__track-title">{{ track.title }}</p>
+                                <p class="xc-task-map-sidebar__track-date">{{ track.date }}</p>
                                 <p class="xc-task-map-sidebar__track-meta" v-if="props.trackStates[index]?.maxGpsAltitude !== null">
                                     Max GPS alt: {{ Math.round(props.trackStates[index].maxGpsAltitude) }} m
                                 </p>

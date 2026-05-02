@@ -145,7 +145,7 @@ export function useXcTaskMapStore(props: UseXcTaskMapStoreProps): StoreApi {
 	});
 
 	const normalizedTracks = computed<NormalizedTrack[]>(() => parsedTracks.value.map((track, index) => ({
-		title: String(track?.title ?? `Track ${index + 1}`),
+		date: track.date,
 		trackURL: String(track?.trackURL ?? ''),
 		igcText: String(track?.igcText ?? ''),
 		pilot: String(track?.pilot ?? ''),
@@ -187,7 +187,8 @@ export function useXcTaskMapStore(props: UseXcTaskMapStoreProps): StoreApi {
 	const selectedChartTracks = computed<ChartTrack[]>(() => trackStates.value
 		.map((state, index) => ({
 			index,
-			title: normalizedTracks.value[index]?.pilot || normalizedTracks.value[index]?.title || `Track ${index + 1}`,
+			title: normalizedTracks.value[index]?.pilot || `Track ${index + 1}`,
+			date: normalizedTracks.value[index]?.date,
 			color: state?.color,
 			points: Array.isArray(state?.timelinePoints) ? state.timelinePoints : [],
 			timezoneOffsetSeconds: state?.timezoneOffsetSeconds ?? 0,
@@ -438,7 +439,7 @@ export function useXcTaskMapStore(props: UseXcTaskMapStoreProps): StoreApi {
 						coordinates,
 					},
 					properties: {
-						title: track.title,
+						date: track.date,
 						pilot: track.pilot,
 						contestId: track.contestId,
 					},

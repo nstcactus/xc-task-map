@@ -22,15 +22,15 @@ export interface TimelinePoint {
 }
 
 export interface RawTrack {
-    title?: string;
+    date: string;
     trackURL?: string;
     igcText?: string;
-    pilot?: string;
+    pilot: string;
     contestId?: number | string;
 }
 
 export interface NormalizedTrack {
-    title: string;
+    date: string;
     trackURL: string;
     igcText: string;
     pilot: string;
@@ -55,12 +55,13 @@ export interface TrackState {
     maxGpsAltitude: number | null;
     timelinePoints: TimelinePoint[];
     color: string;
-  timezoneOffsetSeconds: number;
+    timezoneOffsetSeconds: number;
 }
 
 export interface ChartTrack {
     index: number;
     title: string;
+    date?: string;
     color: string;
     points: TimelinePoint[];
   timezoneOffsetSeconds: number;
