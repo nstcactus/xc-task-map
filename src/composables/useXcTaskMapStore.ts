@@ -1,5 +1,5 @@
 import { computed, ref, watch, type ComputedRef, type Ref } from 'vue';
-import * as IGCParser from 'igc-parser';
+import IGCParser from 'igc-parser';
 import { optimizeTask } from 'xc-task-optimizer';
 import { mapboxAdapter, type XcTaskMapAdapter } from '../xc-task-map/adapters';
 import {
@@ -405,9 +405,9 @@ export function useXcTaskMapStore(props: UseXcTaskMapStoreProps): StoreApi {
 			if (firstValidFix) {
 				const firstFixTimestampMs = getFixTimestampMs(firstValidFix);
 				const ianaTimeZone = getIanaTimeZoneFromCoordinates(firstValidFix.latitude || 0, firstValidFix.longitude || 0);
-				if (ianaTimeZone && Number.isFinite(firstFixTimestampMs)) {
+				if (ianaTimeZone && firstFixTimestampMs !== null) {
 					const utcOffsetSeconds = getUtcOffsetSecondsAtTimestamp(firstFixTimestampMs, ianaTimeZone);
-					if (Number.isFinite(utcOffsetSeconds)) {
+					if (utcOffsetSeconds !== null) {
 						trackTimezoneOffsetSeconds = utcOffsetSeconds;
 					}
 				}
@@ -541,16 +541,19 @@ export function useXcTaskMapStore(props: UseXcTaskMapStoreProps): StoreApi {
 					return;
 				}
 
+				const latNumber = Number(lat);
+				const lonNumber = Number(lon);
+
 				const pointType = getPointTypeForDisplay(point, index, taskData.turnpoints?.length ?? 0);
 
-				bounds.extend([lon, lat]);
+				bounds.extend([lonNumber, latNumber]);
 
 				const sourceId = `task-point-${index}`;
 				const layerId = `task-point-circle-${index}`;
 				const borderLayerId = `task-point-circle-border-${index}`;
 
 				if (mapInstance.value && !resolvedMapAdapter.value.getSource(mapInstance.value, sourceId)) {
-					resolvedMapAdapter.value.addSource(mapInstance.value, sourceId, createGeoJSONCircle([lon, lat], radius / 1000));
+					resolvedMapAdapter.value.addSource(mapInstance.value, sourceId, createGeoJSONCircle([lonNumber, latNumber], radius / 1000));
 
 					resolvedMapAdapter.value.addLayer(mapInstance.value, {
 						id: layerId,
@@ -590,8 +593,8 @@ export function useXcTaskMapStore(props: UseXcTaskMapStoreProps): StoreApi {
 					}
 
 					return {
-						lat,
-						lng: lon,
+						lat: Number(lat),
+						lng: Number(lon),
 						radius: point.radius || 0,
 						type: mapToOptimizerType(point.type),
 						name: point.waypoint?.name || `Task Point ${index}`,

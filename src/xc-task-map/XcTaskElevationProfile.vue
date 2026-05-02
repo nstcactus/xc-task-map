@@ -107,9 +107,9 @@ function resolveHoveredTrackPoint(chart: any, event: HoverEventPosition | null):
 
     let closest: (HoveredProfilePointPayload & { score: number }) | null = null;
 
-    props.tracks.forEach((track) => {
+    for (const track of props.tracks) {
         const point = findNearestPointByX(track.points, xValue);
-        if (!point) return;
+        if (!point) continue;
 
         const score = Math.abs(point.y - yValue);
         if (!closest || score < closest.score) {
@@ -119,7 +119,7 @@ function resolveHoveredTrackPoint(chart: any, event: HoverEventPosition | null):
                 score,
             };
         }
-    });
+    }
 
     if (!closest) {
         clearTooltipState();
@@ -127,17 +127,19 @@ function resolveHoveredTrackPoint(chart: any, event: HoverEventPosition | null):
         return;
     }
 
-    const track = props.tracks.find((candidate) => candidate.index === closest.trackIndex);
+    const hoveredPoint = closest;
+
+    const track = props.tracks.find((candidate) => candidate.index === hoveredPoint.trackIndex);
     if (track) {
-        const utcTime = formatUtcTime(closest.point.x);
-        const localTime = formatUtcTime(closest.point.x + (track.timezoneOffsetSeconds * 1000));
+        const utcTime = formatUtcTime(hoveredPoint.point.x);
+        const localTime = formatUtcTime(hoveredPoint.point.x + (track.timezoneOffsetSeconds * 1000));
 
         tooltipState.value = {
             chartX: event.x,
             chartY: event.y,
             track,
-            point: {...closest.point},
-            elevationMeters: Math.round(closest.point.y),
+            point: {...hoveredPoint.point},
+            elevationMeters: Math.round(hoveredPoint.point.y),
             utcTime,
             localTime,
             timezoneOffsetSeconds: track.timezoneOffsetSeconds ?? 0,
@@ -146,7 +148,7 @@ function resolveHoveredTrackPoint(chart: any, event: HoverEventPosition | null):
         clearTooltipState();
     }
 
-    emit('hover-point', closest);
+    emit('hover-point', hoveredPoint);
 }
 
 function handleChartMouseMove(event: MouseEvent): void {
@@ -231,10 +233,12 @@ function syncElevationChart(): void {
                             title: (items) => {
                                 const first = items[0];
                                 if (!first) return '';
+                                const parsedX = first.parsed?.x;
+                                if (typeof parsedX !== 'number' || !Number.isFinite(parsedX)) return '';
                                 const datasetIndex = first.datasetIndex ?? 0;
                                 const track = props.tracks[datasetIndex];
                                 const offset = track?.timezoneOffsetSeconds ?? 0;
-                                return formatTimeOfDay(first.parsed.x, offset);
+                                return formatTimeOfDay(parsedX, offset);
                             },
                             label: (item) => {
                                 const elevationMeters = Number(item.parsed?.y);
@@ -253,9 +257,9 @@ function syncElevationChart(): void {
     if (!elevationChart.value) return;
 
     elevationChart.value.data.datasets = datasets;
-    const min = props.timeDomain?.min;
-    const max = props.timeDomain?.max;
-    const hasValidDomain = Number.isFinite(min) && Number.isFinite(max) && min < max;
+    const min = props.timeDomain?.min ?? null;
+    const max = props.timeDomain?.max ?? null;
+    const hasValidDomain = min !== null && max !== null && min < max;
 
     if (elevationChart.value.options.scales?.x) {
         elevationChart.value.options.scales.x.min = hasValidDomain ? min : undefined;

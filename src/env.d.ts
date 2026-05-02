@@ -5,3 +5,8 @@ declare module '*.vue' {
   const component: DefineComponent<Record<string, never>, Record<string, never>, unknown>;
   export default component;
 }
+
+declare module '@studiometa/vue-mapbox-gl' {
+  import type { Component } from 'vue';
+  export const MapboxMap: Component;
+}

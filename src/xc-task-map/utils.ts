@@ -83,14 +83,17 @@ export function buildTimelinePoints(fixes: GenericFix[]): TimelinePoint[] {
 				return null;
 			}
 
+			const longitude = Number(fix.longitude);
+			const latitude = Number(fix.latitude);
+
 			const elevation = Number.isFinite(fix?.gpsAltitude)
-				? fix.gpsAltitude
+				? Number(fix.gpsAltitude)
 				: Number.isFinite(fix?.pressureAltitude)
-					? fix.pressureAltitude
+					? Number(fix.pressureAltitude)
 					: null;
 			const secondsOfDay = getFixSecondsOfDay(fix);
 
-			if (!Number.isFinite(elevation) || !Number.isFinite(secondsOfDay)) {
+			if (elevation === null || secondsOfDay === null || !Number.isFinite(elevation)) {
 				return null;
 			}
 
@@ -102,8 +105,8 @@ export function buildTimelinePoints(fixes: GenericFix[]): TimelinePoint[] {
 			return {
 				x: (secondsOfDay + dayOffsetSeconds) * 1000,
 				y: elevation,
-				lng: fix.longitude,
-				lat: fix.latitude,
+				lng: longitude,
+				lat: latitude,
 			};
 		})
 		.filter((point): point is TimelinePoint => point !== null);
