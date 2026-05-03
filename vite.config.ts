@@ -12,10 +12,11 @@ export default defineConfig({
       formats: ['es', 'cjs'],
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ['vue', 'vue-i18n'],
       output: {
         globals: {
           vue: 'Vue',
+          'vue-i18n': 'VueI18n',
         },
       },
     },

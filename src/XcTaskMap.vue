@@ -2,6 +2,8 @@
 import XcTaskElevationProfile from './xc-task-map/XcTaskElevationProfile.vue';
 import XcTaskMapCanvas from './xc-task-map/XcTaskMapCanvas.vue';
 import XcTaskMapSidebar from './xc-task-map/XcTaskMapSidebar.vue';
+import { useI18n } from 'vue-i18n';
+import { renderMessageTemplate, xcTaskMapMessages } from './messages';
 import { useXcTaskMapStore } from './composables/useXcTaskMapStore';
 import type { XcTaskMapAdapter } from './xc-task-map/adapters';
 import type { HoveredProfilePointPayload, RawTrack, TaskData, TaskLoader, TrackColorResolver, TrackLoader } from './xc-task-map/types';
@@ -21,6 +23,20 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
     tracks: () => [],
 });
+
+const { t } = useI18n({ useScope: 'global' });
+const fallbackMessages: Record<string, string> = xcTaskMapMessages.en;
+
+function tf(key: string, params: Record<string, unknown> = {}): string {
+    const translated = t(key, params);
+
+    if (translated !== key) {
+        return translated;
+    }
+
+    const fallback = fallbackMessages[key] ?? key;
+    return renderMessageTemplate(fallback, params);
+}
 
 const {
     activeTab,
@@ -62,14 +78,14 @@ function handleMapReady(instance: unknown): void {
                 type="button"
                 @click="toggleSidebar"
             >
-                {{ isSidebarOpen ? 'Hide sidebar' : 'Show sidebar' }}
+                {{ isSidebarOpen ? tf('xc-task-map.sidebar.toggle.hide') : tf('xc-task-map.sidebar.toggle.show') }}
             </button>
             <button
                 class="xc-task-map__toggle-button xc-task-map__toggle-button--secondary"
                 type="button"
                 @click="toggleElevationOverlay"
             >
-                {{ isElevationOverlayOpen ? 'Hide elevation' : 'Show elevation' }}
+                {{ isElevationOverlayOpen ? tf('xc-task-map.elevation.toggle.hide') : tf('xc-task-map.elevation.toggle.show') }}
             </button>
 
             <XcTaskMapCanvas

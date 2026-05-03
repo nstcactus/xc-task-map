@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { renderMessageTemplate, xcTaskMapMessages } from '../messages';
 import { getTurnpointLabel } from './utils';
+import { useI18n } from 'vue-i18n';
 import type { NormalizedTrack, SidebarTab, TrackState, Turnpoint } from './types';
 
 interface Props {
@@ -30,6 +32,20 @@ const emit = defineEmits<{
     (event: 'hover-turnpoint', index: number): void;
     (event: 'clear-hovered-turnpoint'): void;
 }>();
+
+const { t } = useI18n({ useScope: 'global' });
+const fallbackMessages: Record<string, string> = xcTaskMapMessages.en;
+
+function tf(key: string, params: Record<string, unknown> = {}): string {
+    const translated = t(key, params);
+
+    if (translated !== key) {
+        return translated;
+    }
+
+    const fallback = fallbackMessages[key] ?? key;
+    return renderMessageTemplate(fallback, params);
+}
 </script>
 
 <template>
@@ -45,7 +61,7 @@ const emit = defineEmits<{
                     :class="{ 'is-active': props.activeTab === 'turnpoints' }"
                     @click="emit('update:activeTab', 'turnpoints')"
                 >
-                    Turnpoints
+                    {{ tf('xc-task-map.sidebar.tabs.turnpoints') }}
                 </button>
                 <button
                     type="button"
@@ -53,22 +69,21 @@ const emit = defineEmits<{
                     :class="{ 'is-active': props.activeTab === 'tracks' }"
                     @click="emit('update:activeTab', 'tracks')"
                 >
-                    Tracks
+                    {{ tf('xc-task-map.sidebar.tabs.tracks') }}
                 </button>
             </div>
-            <p class="xc-task-map-sidebar__meta" v-if="props.activeTab === 'turnpoints'">{{ props.turnpoints.length }} loaded</p>
-            <p class="xc-task-map-sidebar__meta" v-else>{{ props.normalizedTracks.length }} available</p>
+            <p class="xc-task-map-sidebar__meta" v-if="props.activeTab === 'tracks'">{{ tf('xc-task-map.sidebar.meta.available', { n: props.normalizedTracks.length }) }}</p>
         </div>
 
         <div class="xc-task-map-sidebar__content" v-if="props.activeTab === 'turnpoints'">
             <slot name="loading" v-if="props.isLoading">
-                <p class="xc-task-map-sidebar__state-message">Loading task...</p>
+                <p class="xc-task-map-sidebar__state-message">{{ tf('xc-task-map.sidebar.loading') }}</p>
             </slot>
             <slot name="error" v-else-if="props.loadError" :error="props.loadError">
                 <p class="xc-task-map-sidebar__state-message xc-task-map-sidebar__state-message--error">{{ props.loadError }}</p>
             </slot>
             <slot name="empty-turnpoints" v-else-if="!props.turnpoints.length">
-                <p class="xc-task-map-sidebar__state-message">No turnpoints available.</p>
+                <p class="xc-task-map-sidebar__state-message">{{ tf('xc-task-map.sidebar.empty-turnpoints') }}</p>
             </slot>
 
             <ul v-else class="xc-task-map-sidebar__list">
@@ -91,7 +106,7 @@ const emit = defineEmits<{
 
         <div class="xc-task-map-sidebar__content" v-else>
             <slot name="empty-tracks" v-if="!props.normalizedTracks.length">
-                <p class="xc-task-map-sidebar__state-message">No tracks available.</p>
+                <p class="xc-task-map-sidebar__state-message">{{ tf('xc-task-map.sidebar.empty-tracks') }}</p>
             </slot>
 
             <ul v-else class="xc-task-map-sidebar__list">
@@ -113,8 +128,8 @@ const emit = defineEmits<{
                                     <p class="xc-task-map-sidebar__track-pilot">{{ track.pilot }}</p>
                                 </div>
                                 <p class="xc-task-map-sidebar__track-date">{{ track.date }}</p>
-                                <p class="xc-task-map-sidebar__track-meta" v-if="props.trackStates[index]?.maxGpsAltitude !== null">
-                                    Max GPS alt: {{ Math.round(props.trackStates[index].maxGpsAltitude) }} m
+                                <p class="xc-task-map-sidebar__track-meta" v-if="props.trackStates[index]?.maxGpsAltitude != null">
+                                    {{ tf('xc-task-map.sidebar.track.max-gps-alt', { n: Math.round(props.trackStates[index].maxGpsAltitude) }) }}
                                 </p>
                                 <p v-if="props.trackStates[index]?.error" class="xc-task-map-sidebar__track-error">{{ props.trackStates[index].error }}</p>
                             </div>

@@ -1,6 +1,7 @@
 import XcTaskMap from './XcTaskMap.vue';
 
 export { XcTaskMap };
+export { xcTaskMapMessages } from './messages';
 export { useXcTaskMapStore } from './composables/useXcTaskMapStore';
 export { mapboxAdapter } from './xc-task-map/adapters';
 export type { XcTaskMapAdapter, XcTaskMapBounds } from './xc-task-map/adapters';

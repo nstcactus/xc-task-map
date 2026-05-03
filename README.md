@@ -119,9 +119,47 @@ Available slots:
 
 ## i18n
 
-Current text is slot-overridable for state messages and tooltip content. For labels outside slots
-(for example, toggle buttons and tab labels), pass localized wrappers around this component or provide a translated 
-forked wrapper until dedicated `messages` prop is introduced.
+`xc-task-map` integrates with `vue-i18n` and resolves labels through the global composer.
+
+- Install and configure `vue-i18n` in your host app.
+- The package exports default English messages as `xcTaskMapMessages`.
+- Components include internal English fallback when a key is missing from global messages.
+
+### Setup with vue-i18n v11
+
+```ts
+import { createI18n } from 'vue-i18n';
+import { xcTaskMapMessages } from 'xc-task-map';
+
+const i18n = createI18n({
+  legacy: false,
+  locale: 'fr-FR',
+  fallbackLocale: 'en',
+  messages: {
+    // Keep defaults as baseline
+    en: xcTaskMapMessages.en,
+    // Override only what you need for your locale
+    'fr-FR': {
+      ...xcTaskMapMessages.en,
+      'xc-task-map.sidebar.tabs.turnpoints': 'Balises',
+      'xc-task-map.sidebar.tabs.tracks': 'Traces',
+    },
+  },
+});
+
+app.use(i18n);
+```
+
+### Key namespace
+
+All built-in keys are namespaced under `xc-task-map.*`, for example:
+
+- `xc-task-map.sidebar.toggle.show`
+- `xc-task-map.sidebar.tabs.turnpoints`
+- `xc-task-map.sidebar.track.max-gps-alt`
+- `xc-task-map.tooltip.local-time`
+
+Default message definitions are exported from `xcTaskMapMessages` (see `src/messages.ts`).
 
 ## Alternative Map Adapter
 
